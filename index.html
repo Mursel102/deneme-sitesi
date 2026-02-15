@@ -7,6 +7,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Büyüteç icon için (Google Material Icons) -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <style>
     :root {
       --bg: #0f0f11;
@@ -16,31 +18,18 @@
       --accent: #22d3ee;
       --accent-dark: #0891b2;
       --border: #272a31;
+      --search-bg: #1e1e2e;
+      --search-border: #334155;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, sans-serif; line-height:1.6; min-height:100vh; }
 
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Inter', system-ui, sans-serif;
-      line-height: 1.6;
-      min-height: 100vh;
-    }
-
-    .container {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 2.5rem 1.5rem;
-    }
+    .container { max-width: 1100px; margin: 0 auto; padding: 2.5rem 1.5rem; }
 
     header {
       text-align: center;
-      padding: 4rem 0 3rem;
+      padding: 3rem 0 2.5rem;
     }
 
     .logo-title {
@@ -50,22 +39,64 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       letter-spacing: -1px;
+      margin-bottom: 1rem;
     }
 
     .subtitle {
       font-size: 1.25rem;
       color: var(--text-secondary);
-      margin-top: 0.75rem;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
+      margin-bottom: 2rem;
     }
 
+    /* Modrinth Tarzı Arama Çubuğu */
+    .search-container {
+      max-width: 600px;
+      margin: 0 auto 3rem;
+      position: relative;
+    }
+
+    .search-form {
+      display: flex;
+      align-items: center;
+      background: var(--search-bg);
+      border: 1px solid var(--search-border);
+      border-radius: 999px; /* Yuvarlak Modrinth stili */
+      overflow: hidden;
+      transition: all 0.2s;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
+    .search-form:focus-within {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.2);
+    }
+
+    .search-icon {
+      padding: 0 1rem;
+      color: var(--text-secondary);
+      font-size: 1.5rem;
+    }
+
+    .search-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--text);
+      font-size: 1.1rem;
+      padding: 1rem 1.5rem 1rem 0;
+      outline: none;
+    }
+
+    .search-input::placeholder {
+      color: var(--text-secondary);
+      opacity: 0.8;
+    }
+
+    /* Kartlar (önceki gibi) */
     .cards {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       gap: 1.5rem;
-      margin: 3rem 0;
     }
 
     .card {
@@ -74,7 +105,6 @@
       border-radius: 16px;
       overflow: hidden;
       transition: all 0.25s ease;
-      position: relative;
     }
 
     .card:hover {
@@ -83,28 +113,19 @@
       box-shadow: 0 20px 35px rgba(34, 211, 238, 0.12);
     }
 
-    .card-img {
-      width: 100%;
+    .card-placeholder {
       height: 180px;
-      object-fit: cover;
-      background: #111;
+      background: #1a1f2e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      color: #334155;
     }
 
-    .card-content {
-      padding: 1.5rem;
-    }
-
-    .card-title {
-      font-size: 1.4rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-    }
-
-    .card-desc {
-      color: var(--text-secondary);
-      font-size: 0.95rem;
-      margin-bottom: 1.25rem;
-    }
+    .card-content { padding: 1.5rem; }
+    .card-title { font-size: 1.4rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .card-desc { color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 1.25rem; }
 
     .btn {
       display: inline-block;
@@ -117,20 +138,7 @@
       transition: all 0.2s;
     }
 
-    .btn:hover {
-      background: var(--accent-dark);
-      transform: translateY(-1px);
-    }
-
-    .btn-outline {
-      background: transparent;
-      border: 1px solid var(--accent);
-      color: var(--accent);
-    }
-
-    .btn-outline:hover {
-      background: rgba(34, 211, 238, 0.1);
-    }
+    .btn:hover { background: var(--accent-dark); transform: translateY(-1px); }
 
     footer {
       text-align: center;
@@ -147,55 +155,51 @@
 
     <header>
       <h1 class="logo-title">MÜRSEL</h1>
-      <p class="subtitle">
-        Modlar • Modpackler • Resource Packler • Random Minecraft İçerikleri
-      </p>
+      <p class="subtitle">Modlar • Modpackler • Resource Packler • Random Minecraft Kaosu</p>
+
+      <!-- Arama Çubuğu - Modrinth gibi -->
+      <div class="search-container">
+        <form class="search-form" action="https://modrinth.com/search" method="get" target="_blank">
+          <span class="material-icons search-icon">search</span>
+          <input 
+            type="text" 
+            name="q" 
+            class="search-input" 
+            placeholder="Mod, modpack, shader ara..." 
+            autocomplete="off"
+          >
+        </form>
+      </div>
     </header>
 
     <div class="cards">
-
-      <!-- 1. Kart -->
+      <!-- Örnek kartlar -->
       <div class="card">
-        <div style="height:180px; background:#1a1f2e; display:flex; align-items:center; justify-content:center; font-size:3rem; color:#334155;">
-          Modlar
-        </div>
+        <div class="card-placeholder">Modlar</div>
         <div class="card-content">
           <h3 class="card-title">En Sevdiğim Modlar</h3>
-          <p class="card-desc">Şu an oynadığım ve en çok kullandığım modlar burada! Hepsi güncel.</p>
-          <a href="#" class="btn">Modlara Göz At →</a>
+          <p class="card-desc">Güncel ve test edilmiş mod listesi</p>
+          <a href="#" class="btn">Göz At →</a>
         </div>
       </div>
 
-      <!-- 2. Kart -->
       <div class="card">
-        <div style="height:180px; background:#1a1f2e; display:flex; align-items:center; justify-content:center; font-size:3rem; color:#334155;">
-          Modpack
-        </div>
+        <div class="card-placeholder">Modpack</div>
         <div class="card-content">
-          <h3 class="card-title">Kaos Modpack</h3>
-          <p class="card-desc">150+ mod, deli gibi optimizasyon, tam kaos deneyimi</p>
-          <a href="#" class="btn">Modpack İndir</a>
+          <h3 class="card-title">Kaos Modpack v1.0</h3>
+          <p class="card-desc">150+ mod, tam optimizasyonlu kaos</p>
+          <a href="#" class="btn">İndir</a>
         </div>
       </div>
 
-      <!-- 3. Kart -->
       <div class="card">
-        <div style="height:180px; background:#1a1f2e; display:flex; align-items:center; justify-content:center; font-size:3rem; color:#334155;">
-          Discord
-        </div>
+        <div class="card-placeholder">Discord</div>
         <div class="card-content">
-          <h3 class="card-title">Topluluk Sunucum</h3>
-          <p class="card-desc">Mod konuşmaları, hile muhabbeti, meme savaşı</p>
+          <h3 class="card-title">Topluluk</h3>
+          <p class="card-desc">Mod muhabbeti, meme, yardım</p>
           <a href="https://discord.gg/xxxxxxxx" target="_blank" class="btn">Katıl →</a>
         </div>
       </div>
-
-    </div>
-
-    <div style="text-align:center; margin: 4rem 0;">
-      <a href="https://www.youtube.com/@xxxxxxxx" target="_blank" class="btn btn-outline" style="font-size:1.1rem; padding:1rem 2rem;">
-        YouTube Kanalıma Git →
-      </a>
     </div>
 
   </div>
@@ -206,3 +210,4 @@
 
 </body>
 </html>
+
