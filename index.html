@@ -4,146 +4,182 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Mürsel - Modlar & İçerikler</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <!-- Büyüteç icon için (Google Material Icons) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <style>
     :root {
-      --bg: #0f0f11;
-      --surface: #16181d;
-      --text: #e5e7eb;
-      --text-secondary: #9ca3af;
-      --accent: #22d3ee;
-      --accent-dark: #0891b2;
-      --border: #272a31;
-      --search-bg: #1e1e2e;
-      --search-border: #334155;
+      --bg: #0a0e17;
+      --surface: #11151f;
+      --text: #d1d5db;
+      --text-sec: #9ca3af;
+      --accent: #10b981; /* Modrinth yeşili */
+      --accent-dark: #059669;
+      --border: #1f2937;
+      --card-bg: #161b22;
+      --green: #10b981;
     }
-
     * { margin:0; padding:0; box-sizing:border-box; }
-    body { background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, sans-serif; line-height:1.6; min-height:100vh; }
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; line-height:1.5; }
 
-    .container { max-width: 1100px; margin: 0 auto; padding: 2.5rem 1.5rem; }
-
-    header {
-      text-align: center;
-      padding: 3rem 0 2.5rem;
-    }
-
-    .logo-title {
-      font-size: 3.5rem;
-      font-weight: 700;
-      background: linear-gradient(90deg, #22d3ee, #a78bfa, #f472b6);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      letter-spacing: -1px;
-      margin-bottom: 1rem;
-    }
-
-    .subtitle {
-      font-size: 1.25rem;
-      color: var(--text-secondary);
-      margin-bottom: 2rem;
-    }
-
-    /* Modrinth Tarzı Arama Çubuğu */
-    .search-container {
-      max-width: 600px;
-      margin: 0 auto 3rem;
-      position: relative;
-    }
-
-    .search-form {
+    .top-nav {
+      background: #0f172a;
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 2rem;
       display: flex;
       align-items: center;
-      background: var(--search-bg);
-      border: 1px solid var(--search-border);
-      border-radius: 999px; /* Yuvarlak Modrinth stili */
-      overflow: hidden;
-      transition: all 0.2s;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    .logo { font-size: 1.5rem; font-weight: 700; color: var(--green); }
+    .nav-tabs {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .nav-tabs a {
+      color: var(--text-sec);
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0.5rem 0;
+      border-bottom: 2px solid transparent;
+    }
+    .nav-tabs a.active, .nav-tabs a:hover { color: white; border-bottom: 2px solid var(--green); }
+
+    .header-extra {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .btn-green {
+      background: var(--green);
+      color: black;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .btn-green:hover { background: var(--accent-dark); }
+
+    main {
+      display: flex;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1.5rem;
+      gap: 2rem;
     }
 
-    .search-form:focus-within {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.2);
+    aside.sidebar {
+      width: 280px;
+      flex-shrink: 0;
     }
-
-    .search-icon {
-      padding: 0 1rem;
-      color: var(--text-secondary);
-      font-size: 1.5rem;
+    .filter-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
     }
+    .filter-section h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.75rem;
+      color: white;
+    }
+    .filter-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 0.5rem 0;
+      color: var(--text-sec);
+    }
+    .filter-item input[type="checkbox"] { accent-color: var(--green); }
 
+    .content-area { flex: 1; }
+    .search-bar-container {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
     .search-input {
       flex: 1;
       background: transparent;
       border: none;
-      color: var(--text);
-      font-size: 1.1rem;
-      padding: 1rem 1.5rem 1rem 0;
+      color: white;
+      font-size: 1rem;
       outline: none;
     }
+    .search-input::placeholder { color: var(--text-sec); }
 
-    .search-input::placeholder {
-      color: var(--text-secondary);
-      opacity: 0.8;
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 1rem;
     }
+    .sort-view { display: flex; gap: 1rem; color: var(--text-sec); }
 
-    /* Kartlar (önceki gibi) */
-    .cards {
+    .mods-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 1.5rem;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.25rem;
     }
 
-    .card {
-      background: var(--surface);
+    .mod-card {
+      background: var(--card-bg);
       border: 1px solid var(--border);
-      border-radius: 16px;
+      border-radius: 12px;
       overflow: hidden;
-      transition: all 0.25s ease;
+      transition: all 0.2s;
     }
-
-    .card:hover {
-      transform: translateY(-8px);
-      border-color: var(--accent);
-      box-shadow: 0 20px 35px rgba(34, 211, 238, 0.12);
+    .mod-card:hover {
+      border-color: var(--green);
+      transform: translateY(-4px);
     }
-
-    .card-placeholder {
-      height: 180px;
-      background: #1a1f2e;
+    .mod-icon {
+      height: 120px;
+      background: #1e293b;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 3rem;
       color: #334155;
     }
-
-    .card-content { padding: 1.5rem; }
-    .card-title { font-size: 1.4rem; font-weight: 600; margin-bottom: 0.5rem; }
-    .card-desc { color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 1.25rem; }
-
-    .btn {
-      display: inline-block;
-      background: var(--accent);
-      color: #000;
-      font-weight: 600;
-      padding: 0.65rem 1.4rem;
-      border-radius: 999px;
-      text-decoration: none;
-      transition: all 0.2s;
+    .mod-content { padding: 1rem; }
+    .mod-title { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.25rem; color: white; }
+    .mod-author { color: var(--green); font-size: 0.9rem; margin-bottom: 0.5rem; }
+    .mod-desc { font-size: 0.9rem; color: var(--text-sec); margin-bottom: 0.75rem; line-height: 1.4; }
+    .mod-stats {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.85rem;
+      color: var(--text-sec);
     }
-
-    .btn:hover { background: var(--accent-dark); transform: translateY(-1px); }
+    .mod-stats span { display: flex; align-items: center; gap: 0.3rem; }
+    .mod-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+    .tag {
+      background: #1e293b;
+      color: var(--text-sec);
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+    }
+    .tag.loader { background: var(--green); color: black; font-weight: 600; }
 
     footer {
       text-align: center;
-      padding: 3rem 0;
-      color: var(--text-secondary);
+      padding: 2rem;
+      color: var(--text-sec);
       font-size: 0.9rem;
       border-top: 1px solid var(--border);
     }
@@ -151,63 +187,109 @@
 </head>
 <body>
 
-  <div class="container">
+  <nav class="top-nav">
+    <div class="logo">Mürsel</div>
+    <div class="nav-tabs">
+      <a href="#" class="active">Modlar</a>
+      <a href="#">Kaynak Paketleri</a>
+      <a href="#">Veri Paketleri</a>
+      <a href="#">Shaderlar</a>
+      <a href="#">Mod Paketleri</a>
+      <a href="#">Pluginler</a>
+    </div>
+    <div class="header-extra">
+      <a href="https://modrinth.com" target="_blank" class="btn-green">Modrinth'e Git</a>
+      <span class="material-icons" style="color:var(--text-sec); cursor:pointer;">settings</span>
+    </div>
+  </nav>
 
-    <header>
-      <h1 class="logo-title">MÜRSEL</h1>
-      <p class="subtitle">Modlar • Modpackler • Resource Packler • Random Minecraft Kaosu</p>
-
-      <!-- Arama Çubuğu - Modrinth gibi -->
-      <div class="search-container">
-        <form class="search-form" action="https://modrinth.com/search" method="get" target="_blank">
-          <span class="material-icons search-icon">search</span>
-          <input 
-            type="text" 
-            name="q" 
-            class="search-input" 
-            placeholder="Mod, modpack, shader ara..." 
-            autocomplete="off"
-          >
-        </form>
-      </div>
-    </header>
-
-    <div class="cards">
-      <!-- Örnek kartlar -->
-      <div class="card">
-        <div class="card-placeholder">Modlar</div>
-        <div class="card-content">
-          <h3 class="card-title">En Sevdiğim Modlar</h3>
-          <p class="card-desc">Güncel ve test edilmiş mod listesi</p>
-          <a href="#" class="btn">Göz At →</a>
-        </div>
+  <main>
+    <aside class="sidebar">
+      <div class="filter-section">
+        <h3>Oyun Sürümü</h3>
+        <div class="filter-item"><input type="checkbox" checked> 1.21.x</div>
+        <div class="filter-item"><input type="checkbox"> 1.20.x</div>
+        <div class="filter-item"><input type="checkbox"> Tüm sürümleri göster</div>
       </div>
 
-      <div class="card">
-        <div class="card-placeholder">Modpack</div>
-        <div class="card-content">
-          <h3 class="card-title">Kaos Modpack v1.0</h3>
-          <p class="card-desc">150+ mod, tam optimizasyonlu kaos</p>
-          <a href="#" class="btn">İndir</a>
-        </div>
+      <div class="filter-section">
+        <h3>Yükleyici</h3>
+        <div class="filter-item"><input type="checkbox" checked> Fabric</div>
+        <div class="filter-item"><input type="checkbox"> Forge</div>
+        <div class="filter-item"><input type="checkbox"> NeoForge</div>
+        <div class="filter-item"><input type="checkbox"> Quilt</div>
       </div>
 
-      <div class="card">
-        <div class="card-placeholder">Discord</div>
-        <div class="card-content">
-          <h3 class="card-title">Topluluk</h3>
-          <p class="card-desc">Mod muhabbeti, meme, yardım</p>
-          <a href="https://discord.gg/xxxxxxxx" target="_blank" class="btn">Katıl →</a>
+      <div class="filter-section">
+        <h3>Kategoriler</h3>
+        <div class="filter-item"><input type="checkbox"> Optimizasyon</div>
+        <div class="filter-item"><input type="checkbox"> Kütüphane</div>
+        <div class="filter-item"><input type="checkbox"> Dekorasyon</div>
+        <div class="filter-item"><input type="checkbox"> Cursed</div>
+      </div>
+    </aside>
+
+    <div class="content-area">
+      <div class="search-bar-container">
+        <span class="material-icons">search</span>
+        <input type="text" class="search-input" placeholder="Mod, modpack, shader ara..." />
+      </div>
+
+      <div class="controls">
+        <div class="sort-view">
+          Sort by: <strong>Relevance</strong> • View: 20
         </div>
+        <div>1 2 ... 2590 →</div>
+      </div>
+
+      <div class="mods-grid">
+        <!-- Örnek Mod Kartı 1 -->
+        <div class="mod-card">
+          <div class="mod-icon">API</div>
+          <div class="mod-content">
+            <div class="mod-title">Fabric API</div>
+            <div class="mod-author">by modmuss50</div>
+            <div class="mod-desc">Lightweight and modular mods API providing common hooks and intercompatibility.</div>
+            <div class="mod-stats">
+              <span>↓ 131.66M</span>
+              <span>♥ 27.6k</span>
+              <span>4 gün önce</span>
+            </div>
+            <div class="mod-tags">
+              <span class="tag">Client or server</span>
+              <span class="tag">Kütüphane</span>
+              <span class="tag loader">Fabric</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Örnek Mod Kartı 2 -->
+        <div class="mod-card">
+          <div class="mod-icon">🔥</div>
+          <div class="mod-content">
+            <div class="mod-title">Sodium</div>
+            <div class="mod-author">by jellysquid3</div>
+            <div class="mod-desc">The fastest and most compatible rendering optimization mod for Minecraft.</div>
+            <div class="mod-stats">
+              <span>↓ 120.96M</span>
+              <span>♥ 33.0k</span>
+              <span>3 hafta önce</span>
+            </div>
+            <div class="mod-tags">
+              <span class="tag">Client</span>
+              <span class="tag">Optimizasyon</span>
+              <span class="tag loader">Fabric</span>
+              <span class="tag loader">NeoForge</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Daha fazla kart ekleyebilirsin -->
       </div>
     </div>
+  </main>
 
-  </div>
-
-  <footer>
-    © 2026 Mürsel • Powered by Cloudflare Pages • Modrinth Vibes
-  </footer>
+  <footer>© 2026 Mürsel • Powered by Cloudflare Pages • Modrinth Tarzı</footer>
 
 </body>
 </html>
-
