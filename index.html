@@ -42,6 +42,7 @@
       font-weight: 500;
       padding: 0.5rem 0;
       border-bottom: 2px solid transparent;
+      cursor: pointer;
     }
     .nav-tabs a.active, .nav-tabs a:hover { color: white; border-bottom: 2px solid var(--green); }
 
@@ -136,11 +137,13 @@
       border-radius: 12px;
       overflow: hidden;
       transition: all 0.2s;
+      cursor: pointer;
     }
     .mod-card:hover {
       border-color: var(--green);
       transform: translateY(-4px);
     }
+    .mod-card a { text-decoration: none; color: inherit; display: block; }
     .mod-icon {
       height: 120px;
       background: #1e293b;
@@ -183,23 +186,24 @@
       font-size: 0.9rem;
       border-top: 1px solid var(--border);
     }
+
+    /* Gizli modlar için */
+    .hidden { display: none !important; }
   </style>
 </head>
 <body>
 
   <nav class="top-nav">
-    <div class="logo">Mürsel</div>
+    <div class="logo">Mürsel Mods</div>
     <div class="nav-tabs">
-      <a href="#" class="active">Modlar</a>
-      <a href="#">Kaynak Paketleri</a>
-      <a href="#">Veri Paketleri</a>
-      <a href="#">Shaderlar</a>
-      <a href="#">Mod Paketleri</a>
-      <a href="#">Pluginler</a>
+      <a href="#" class="active" onclick="showSection('mods')">Modlar</a>
+      <a href="#" onclick="showSection('packs')">Mod Paketleri</a>
+      <a href="#" onclick="showSection('shaders')">Shaderlar</a>
+      <a href="#" onclick="showSection('resources')">Kaynak Paketleri</a>
     </div>
     <div class="header-extra">
-      <a href="https://modrinth.com" target="_blank" class="btn-green">Modrinth'e Git</a>
-      <span class="material-icons" style="color:var(--text-sec); cursor:pointer;">settings</span>
+      <a href="https://modrinth.com/app" target="_blank" class="btn-green">Modrinth App İndir</a>
+      <span class="material-icons" style="color:var(--text-sec); cursor:pointer;" onclick="alert('Ayarlar yakında!')">settings</span>
     </div>
   </nav>
 
@@ -207,49 +211,50 @@
     <aside class="sidebar">
       <div class="filter-section">
         <h3>Oyun Sürümü</h3>
-        <div class="filter-item"><input type="checkbox" checked> 1.21.x</div>
-        <div class="filter-item"><input type="checkbox"> 1.20.x</div>
-        <div class="filter-item"><input type="checkbox"> Tüm sürümleri göster</div>
+        <div class="filter-item"><input type="checkbox" id="ver121" checked onchange="filterMods()"> 1.21.x</div>
+        <div class="filter-item"><input type="checkbox" id="ver120" onchange="filterMods()"> 1.20.x</div>
+        <div class="filter-item"><input type="checkbox" id="verAll" checked onchange="filterMods()"> Tüm</div>
       </div>
 
       <div class="filter-section">
         <h3>Yükleyici</h3>
-        <div class="filter-item"><input type="checkbox" checked> Fabric</div>
-        <div class="filter-item"><input type="checkbox"> Forge</div>
-        <div class="filter-item"><input type="checkbox"> NeoForge</div>
-        <div class="filter-item"><input type="checkbox"> Quilt</div>
+        <div class="filter-item"><input type="checkbox" id="fabric" checked onchange="filterMods()"> Fabric</div>
+        <div class="filter-item"><input type="checkbox" id="forge" onchange="filterMods()"> Forge</div>
+        <div class="filter-item"><input type="checkbox" id="neoforge" onchange="filterMods()"> NeoForge</div>
+        <div class="filter-item"><input type="checkbox" id="quilt" onchange="filterMods()"> Quilt</div>
       </div>
 
       <div class="filter-section">
         <h3>Kategoriler</h3>
-        <div class="filter-item"><input type="checkbox"> Optimizasyon</div>
-        <div class="filter-item"><input type="checkbox"> Kütüphane</div>
-        <div class="filter-item"><input type="checkbox"> Dekorasyon</div>
-        <div class="filter-item"><input type="checkbox"> Cursed</div>
+        <div class="filter-item"><input type="checkbox" id="opt" checked onchange="filterMods()"> Optimizasyon</div>
+        <div class="filter-item"><input type="checkbox" id="lib" onchange="filterMods()"> Kütüphane</div>
+        <div class="filter-item"><input type="checkbox" id="deco" onchange="filterMods()"> Dekorasyon</div>
       </div>
     </aside>
 
     <div class="content-area">
-      <div class="search-bar-container">
+      <!-- Arama Formu - Gerçek Modrinth Arama -->
+      <form class="search-bar-container" action="https://modrinth.com/mods" method="get" target="_blank">
         <span class="material-icons">search</span>
-        <input type="text" class="search-input" placeholder="Mod, modpack, shader ara..." />
-      </div>
+        <input type="text" name="q" class="search-input" placeholder="Mod, modpack, shader ara... (Modrinth'e yönlendirir)" />
+      </form>
 
       <div class="controls">
         <div class="sort-view">
           Sort by: <strong>Relevance</strong> • View: 20
         </div>
-        <div>1 2 ... 2590 →</div>
+        <div onclick="alert('Sayfalama yakında!')" style="cursor:pointer; color:var(--text-sec);">1 2 ... 2590 →</div>
       </div>
 
-      <div class="mods-grid">
-        <!-- Örnek Mod Kartı 1 -->
-        <div class="mod-card">
+      <!-- Modlar Grid -->
+      <div id="mods-grid" class="mods-grid">
+        <!-- Fabric API -->
+        <a href="https://modrinth.com/mod/fabric-api" target="_blank" class="mod-card" data-loader="fabric" data-ver="1.21.x" data-cat="lib">
           <div class="mod-icon">API</div>
           <div class="mod-content">
             <div class="mod-title">Fabric API</div>
             <div class="mod-author">by modmuss50</div>
-            <div class="mod-desc">Lightweight and modular mods API providing common hooks and intercompatibility.</div>
+            <div class="mod-desc">Lightweight and modular API for Fabric mods.</div>
             <div class="mod-stats">
               <span>↓ 131.66M</span>
               <span>♥ 27.6k</span>
@@ -257,19 +262,18 @@
             </div>
             <div class="mod-tags">
               <span class="tag">Client or server</span>
-              <span class="tag">Kütüphane</span>
               <span class="tag loader">Fabric</span>
             </div>
           </div>
-        </div>
+        </a>
 
-        <!-- Örnek Mod Kartı 2 -->
-        <div class="mod-card">
+        <!-- Sodium -->
+        <a href="https://modrinth.com/mod/sodium" target="_blank" class="mod-card" data-loader="fabric,neoforge" data-ver="1.21.x" data-cat="opt">
           <div class="mod-icon">🔥</div>
           <div class="mod-content">
             <div class="mod-title">Sodium</div>
             <div class="mod-author">by jellysquid3</div>
-            <div class="mod-desc">The fastest and most compatible rendering optimization mod for Minecraft.</div>
+            <div class="mod-desc">Fastest rendering optimization mod for Minecraft.</div>
             <div class="mod-stats">
               <span>↓ 120.96M</span>
               <span>♥ 33.0k</span>
@@ -277,19 +281,206 @@
             </div>
             <div class="mod-tags">
               <span class="tag">Client</span>
-              <span class="tag">Optimizasyon</span>
               <span class="tag loader">Fabric</span>
               <span class="tag loader">NeoForge</span>
             </div>
           </div>
-        </div>
+        </a>
 
-        <!-- Daha fazla kart ekleyebilirsin -->
+        <!-- Cloth Config API -->
+        <a href="https://modrinth.com/mod/cloth-config" target="_blank" class="mod-card" data-loader="fabric,forge,neoforge" data-ver="1.21.x,1.20.x" data-cat="lib">
+          <div class="mod-icon">⚙️</div>
+          <div class="mod-content">
+            <div class="mod-title">Cloth Config API</div>
+            <div class="mod-author">by shedaniel</div>
+            <div class="mod-desc">Configuration library for Minecraft mods.</div>
+            <div class="mod-stats">
+              <span>↓ 96.54M</span>
+              <span>♥ 13.8k</span>
+              <span>2 ay önce</span>
+            </div>
+            <div class="mod-tags">
+              <span class="tag">Library</span>
+              <span class="tag loader">Fabric</span>
+              <span class="tag loader">Forge</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Iris Shaders -->
+        <a href="https://modrinth.com/mod/iris" target="_blank" class="mod-card" data-loader="fabric,neoforge" data-ver="1.21.x" data-cat="opt">
+          <div class="mod-icon">🌈</div>
+          <div class="mod-content">
+            <div class="mod-title">Iris Shaders</div>
+            <div class="mod-author">by coderbot</div>
+            <div class="mod-desc">Modern shader pack loader for Minecraft.</div>
+            <div class="mod-stats">
+              <span>↓ 92.76M</span>
+              <span>♥ 23.9k</span>
+              <span>3 hafta önce</span>
+            </div>
+            <div class="mod-tags">
+              <span class="tag">Shaders</span>
+              <span class="tag loader">Fabric</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- FerriteCore -->
+        <a href="https://modrinth.com/mod/ferritecore" target="_blank" class="mod-card" data-loader="fabric,forge,neoforge" data-ver="1.21.x" data-cat="opt">
+          <div class="mod-icon">⚡</div>
+          <div class="mod-content">
+            <div class="mod-title">FerriteCore</div>
+            <div class="mod-author">by malte0811</div>
+            <div class="mod-desc">Memory usage optimizations for Minecraft.</div>
+            <div class="mod-stats">
+              <span>↓ 86.51M</span>
+              <span>♥ 12.8k</span>
+              <span>3 hafta önce</span>
+            </div>
+            <div class="mod-tags">
+              <span class="tag">Optimization</span>
+              <span class="tag loader">Fabric</span>
+              <span class="tag loader">Forge</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Create -->
+        <a href="https://modrinth.com/mod/create" target="_blank" class="mod-card" data-loader="fabric,forge" data-ver="1.20.x" data-cat="deco">
+          <div class="mod-icon">🔧</div>
+          <div class="mod-content">
+            <div class="mod-title">Create</div>
+            <div class="mod-author">by simibubi</div>
+            <div class="mod-desc">Kinetic machinery and automation mod.</div>
+            <div class="mod-stats">
+              <span>↓ 150M+</span>
+              <span>♥ 45k</span>
+              <span>1 hafta önce</span>
+            </div>
+            <div class="mod-tags">
+              <span class="tag">Automation</span>
+              <span class="tag loader">Fabric</span>
+              <span class="tag loader">Forge</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Logistics Automation -->
+        <a href="https://modrinth.com/mod/logistics" target="_blank" class="mod-card" data-loader="fabric" data-ver="1.21.x" data-cat="opt">
+          <div class="mod-icon">🚚</div>
+          <div class="mod-content">
+            <div class="mod-title">Logistics Automation</div>
+            <div class="mod-author">by Punchy</div>
+            <div class="mod-desc">Advanced logistics and item transport system.</div>
+            <div class="mod-stats">
+              <span>↓ 50M</span>
+              <span>♥ 10k</span>
+              <span>2 gün önce</span>
+            </div>
+            <div class="mod-tags">
+              <span class="tag">Logistics</span>
+              <span class="tag loader">Fabric</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Pillager Caravans -->
+        <a href="https://modrinth.com/mod/pillager-caravans" target="_blank" class="mod-card" data-loader="fabric,forge" data-ver="1.20.x" data-cat="deco">
+          <div class="mod-icon">🏰</div>
+          <div class="mod-content">
+            <div class="mod-title">Pillager Caravans</div>
+            <div class="mod-author">by Unknown</div>
+            <div class="mod-desc">Adds pillager trading caravans to the world.</div>
+            <div class="mod-stats">
+              <span>↓ 20M</span>
+              <span>♥ 5k</span>
+              <span>1 ay önce</span>
+            </div>
+            <div class="mod-tags">
+              <span class="tag">Adventure</span>
+              <span class="tag loader">Fabric</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Mo' Bends -->
+        <a href="https://modrinth.com/mod/mo-bends-unofficial-modern-port" target="_blank" class="mod-card" data-loader="fabric" data-ver="1.21.x" data-cat="deco">
+          <div class="mod-icon">🦾</div>
+          <div class="mod-content">
+            <div class="mod-title">Mo' Bends Unofficial</div>
+            <div class="mod-author">by Unknown</div>
+            <div class="mod-desc">Better animations for mobs and players.</div>
+            <div class="mod-stats">
+              <span>↓ 30M</span>
+              <span>♥ 8k</span>
+              <span>5 gün önce</span>
+            </div>
+            <div class="mod-tags">
+              <span class="tag">Animation</span>
+              <span class="tag loader">Fabric</span>
+            </div>
+          </div>
+        </a>
       </div>
+
+      <!-- Diğer Bölümler (Gizli) -->
+      <div id="packs-grid" class="mods-grid hidden"></div>
+      <div id="shaders-grid" class="mods-grid hidden"></div>
+      <div id="resources-grid" class="mods-grid hidden"></div>
     </div>
   </main>
 
-  <footer>© 2026 Mürsel • Powered by Cloudflare Pages • Modrinth Tarzı</footer>
+  <footer>© 2026 Mürsel • Powered by Cloudflare Pages • Gerçek Modrinth Linkleri</footer>
+
+  <script>
+    // Nav Tab Değişimi
+    function showSection(section) {
+      document.querySelectorAll('.nav-tabs a').forEach(a => a.classList.remove('active'));
+      event.target.classList.add('active');
+      document.querySelectorAll('.mods-grid').forEach(grid => grid.classList.add('hidden'));
+      document.getElementById(section + '-grid').classList.remove('hidden');
+      // İleride içerik yükle
+      if (section !== 'mods') alert('Bu bölüm yakında eklenecek! Şimdilik modlara dön 😄');
+    }
+
+    // Filtreleme (Basit JS)
+    function filterMods() {
+      const cards = document.querySelectorAll('#mods-grid .mod-card');
+      const verAll = document.getElementById('verAll').checked;
+      const fabric = document.getElementById('fabric').checked;
+      const forge = document.getElementById('forge').checked;
+      const neoforge = document.getElementById('neoforge').checked;
+      const quilt = document.getElementById('quilt').checked;
+      const opt = document.getElementById('opt').checked;
+      const lib = document.getElementById('lib').checked;
+      const deco = document.getElementById('deco').checked;
+
+      cards.forEach(card => {
+        const dataVer = card.dataset.ver;
+        const dataLoader = card.dataset.loader;
+        const dataCat = card.dataset.cat;
+
+        let show = true;
+
+        // Versiyon filtre
+        if (!verAll && dataVer && !dataVer.includes('1.21.x') && !dataVer.includes('1.20.x')) show = false;
+
+        // Loader filtre
+        if (!fabric && dataLoader.includes('fabric')) show = false;
+        if (!forge && dataLoader.includes('forge')) show = false;
+        if (!neoforge && dataLoader.includes('neoforge')) show = false;
+        if (!quilt && dataLoader.includes('quilt')) show = false;
+
+        // Kategori filtre
+        if (!opt && dataCat === 'opt') show = false;
+        if (!lib && dataCat === 'lib') show = false;
+        if (!deco && dataCat === 'deco') show = false;
+
+        card.style.display = show ? 'block' : 'none';
+      });
+    }
+  </script>
 
 </body>
 </html>
