@@ -1,139 +1,209 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Mürsel | Link & Vibes</title>
+  <title>Mürsel - Modlar & Modpack'ler</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Orbitron:wght@500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0a0e17;
-      --text: #e0f0ff;
-      --accent: #00f0ff;
-      --card: #111827;
-      --glow: rgba(0, 240, 255, 0.15);
+      --bg: #0d1117;
+      --surface: #161b22;
+      --text: #c9d1d9;
+      --text-secondary: #8b949e;
+      --accent: #58a6ff;
+      --border: #30363d;
     }
-    * { margin:0; padding:0; box-sizing:border-box; }
     body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
       background: var(--bg);
       color: var(--text);
-      font-family: 'Inter', sans-serif;
       min-height: 100vh;
+    }
+    header {
+      background: #0a0e17;
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .top-bar {
+      max-width: 1400px;
+      margin: 0 auto;
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      justify-content: center;
-      padding: 2rem 1rem;
-      background: linear-gradient(135deg, #0a0e17 0%, #0f172a 100%);
     }
-    .container {
-      text-align: center;
-      max-width: 420px;
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .search {
+      flex: 1;
+      max-width: 500px;
+      margin: 0 2rem;
+    }
+    .search input {
       width: 100%;
+      padding: 0.7rem 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-size: 1rem;
     }
-    .avatar {
-      width: 140px;
-      height: 140px;
-      border-radius: 50%;
-      border: 4px solid var(--accent);
-      box-shadow: 0 0 30px var(--glow);
-      margin: 0 auto 1.5rem;
-      object-fit: cover;
-      transition: transform 0.4s ease;
-    }
-    .avatar:hover { transform: scale(1.08); }
-    h1 {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 2.8rem;
-      margin-bottom: 0.5rem;
-      background: linear-gradient(90deg, #00f0ff, #a78bfa);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .tagline {
-      font-size: 1.2rem;
-      opacity: 0.8;
-      margin-bottom: 2.5rem;
-    }
-    .links {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-    .link {
-      background: var(--card);
+    .search input::placeholder { color: var(--text-secondary); }
+    nav a {
       color: var(--text);
       text-decoration: none;
-      padding: 1.2rem 1.5rem;
-      border-radius: 16px;
-      font-size: 1.15rem;
-      font-weight: 600;
-      border: 1px solid rgba(0,240,255,0.1);
-      backdrop-filter: blur(10px);
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-      position: relative;
-      overflow: hidden;
+      margin-left: 1.5rem;
+      font-weight: 500;
     }
-    .link::before {
-      content: '';
-      position: absolute;
-      top: 0; left: -100%;
-      width: 100%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(0,240,255,0.2), transparent);
-      transition: left 0.7s;
+    nav a:hover { color: var(--accent); }
+
+    main {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
     }
-    .link:hover::before { left: 100%; }
-    .link:hover {
-      transform: translateY(-6px) scale(1.03);
-      box-shadow: 0 12px 35px var(--glow);
-      border-color: var(--accent);
-      color: #fff;
+    h1 {
+      font-size: 2.2rem;
+      margin-bottom: 0.5rem;
     }
-    .socials {
-      margin-top: 2.5rem;
-      display: flex;
-      justify-content: center;
+    .subtitle {
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
       gap: 1.5rem;
     }
-    .social-icon {
-      font-size: 1.8rem;
-      color: #94a3b8;
-      transition: all 0.3s;
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all 0.2s;
     }
-    .social-icon:hover { color: var(--accent); transform: translateY(-4px); }
-    footer {
-      margin-top: 3rem;
+    .card:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+    }
+    .card-img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      background: #0a0e17;
+    }
+    .card-body {
+      padding: 1.2rem;
+    }
+    .card-title {
+      font-size: 1.3rem;
+      margin: 0 0 0.5rem;
+    }
+    .card-desc {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin-bottom: 1rem;
+    }
+    .card-stats {
       font-size: 0.9rem;
-      opacity: 0.6;
+      color: var(--text-secondary);
+    }
+    .tag {
+      background: #21262d;
+      color: var(--accent);
+      padding: 0.2rem 0.6rem;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      margin-right: 0.5rem;
+    }
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-secondary);
+      border-top: 1px solid var(--border);
+      margin-top: 3rem;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <!-- Fotoğrafını buraya koy (GitHub'a yükle veya imgur linki) -->
-    <!-- <img src="https://example.com/senin-foto.jpg" alt="Mürsel" class="avatar"> -->
-    
-    <h1>MÜRSEL</h1>
-    <p class="tagline">Minecraft • Modlar • Random Kaos • Ankara Vibes</p>
 
-    <div class="links">
-      <a href="https://discord.gg/xxxxxxxx" class="link" target="_blank">Discord Sunucuma Gel 🚀</a>
-      <a href="https://youtube.com/@senin-kanal" class="link" target="_blank">YouTube Videolarım</a>
-      <a href="https://instagram.com/mursel_xx" class="link" target="_blank">Instagram Hikayeler</a>
-      <a href="https://twitch.tv/mursel" class="link" target="_blank">Twitch Yayınları</a>
-      <a href="https://github.com/mursel" class="link" target="_blank">Kodlarım & Projeler</a>
-      <a href="mailto:mursel@example.com" class="link">Bana Mail At ✉️</a>
+  <header>
+    <div class="top-bar">
+      <div class="logo">Mürsel</div>
+      <div class="search">
+        <input type="text" placeholder="Mod, modpack, shader ara...">
+      </div>
+      <nav>
+        <a href="#">Modlar</a>
+        <a href="#">Modpack'ler</a>
+        <a href="#">Kaynak Paketleri</a>
+        <a href="#">Discord</a>
+      </nav>
     </div>
+  </header>
 
-    <div class="socials">
-      <a href="#" class="social-icon">𝕏</a>
-      <a href="#" class="social-icon">📺</a>
-      <a href="#" class="social-icon">🎮</a>
+  <main>
+    <h1>Hoş geldin!</h1>
+    <p class="subtitle">Minecraft modları, modpack'ler ve random şeyler burada.</p>
+
+    <div class="grid">
+      <!-- Örnek kartlar - seninkileri değiştir -->
+      <div class="card">
+        <img src="https://via.placeholder.com/400x160/161b22/58a6ff?text=Kaos+Modpack" alt="Modpack" class="card-img">
+        <div class="card-body">
+          <h3 class="card-title">Kaos Modpack v1.0</h3>
+          <p class="card-desc">Meteor Client + korku modları + random şaka modları. Tam kaos deneyimi.</p>
+          <div>
+            <span class="tag">Fabric</span>
+            <span class="tag">1.20.1</span>
+          </div>
+          <p class="card-stats">1.2K indirme • Son güncelleme: dün</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="https://via.placeholder.com/400x160/161b22/58a6ff?text=Hile+Addon" alt="Addon" class="card-img">
+        <div class="card-body">
+          <h3 class="card-title">Meteor Addon - XRay + Fly</h3>
+          <p class="card-desc">Deneysel hile addon'u (sadece test için).</p>
+          <div>
+            <span class="tag">Meteor</span>
+            <span class="tag">Client-side</span>
+          </div>
+          <p class="card-stats">3.4K indirme • Güncel</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="https://via.placeholder.com/400x160/161b22/58a6ff?text=My+Winter+Car+Online" alt="Online Mod" class="card-img">
+        <div class="card-body">
+          <h3 class="card-title">My Winter Car Online (crack uyumlu)</h3>
+          <p class="card-desc">LAN'da arkadaşla oynamak için basit online mod.</p>
+          <div>
+            <span class="tag">1.0</span>
+            <span class="tag">Cracked</span>
+          </div>
+          <p class="card-stats">Yakında</p>
+        </div>
+      </div>
+
+      <!-- İstediğin kadar kart ekle -->
     </div>
+  </main>
 
-    <footer>Powered by Cloudflare Pages • 2026</footer>
-  </div>
+  <footer>
+    © 2026 Mürsel • Powered by Cloudflare Pages • Modrinth tarzı ama benden
+  </footer>
+
 </body>
 </html>
