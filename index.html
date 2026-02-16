@@ -1,112 +1,150 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mal Yağız Yasin - Elektronik Dünyası</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #0f172a;
-            color: white;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elektronik Paylaşım - Mal Yağız Yasin</title>
 
-        header {
-            background: #1e293b;
-            padding: 20px;
-            text-align: center;
-        }
-
-        header h1 {
-            margin: 0;
-            color: #38bdf8;
-        }
-
-        nav {
-            background: #0ea5e9;
-            padding: 10px;
-            text-align: center;
-        }
-
-        nav a {
-            color: white;
-            text-decoration: none;
-            margin: 0 15px;
-            font-weight: bold;
-        }
-
-        nav a:hover {
-            text-decoration: underline;
-        }
-
-        section {
-            padding: 40px;
-            text-align: center;
-        }
-
-        .card {
-            background: #1e293b;
-            margin: 20px auto;
-            padding: 20px;
-            width: 80%;
-            border-radius: 10px;
-            box-shadow: 0 0 15px #0ea5e9;
-        }
-
-        footer {
-            background: #1e293b;
-            text-align: center;
-            padding: 15px;
-            margin-top: 30px;
-            font-size: 14px;
-        }
-
-        button {
-            background: #38bdf8;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        button:hover {
-            background: #0ea5e9;
-        }
-    </style>
+<style>
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:#0f172a;
+    color:white;
+}
+header{
+    background:#1e293b;
+    padding:15px;
+    text-align:center;
+}
+h1{color:#38bdf8;}
+#uploadBtn{
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    width:60px;
+    height:60px;
+    border-radius:50%;
+    font-size:30px;
+    border:none;
+    background:#38bdf8;
+    cursor:pointer;
+}
+.post{
+    background:#1e293b;
+    margin:20px;
+    padding:15px;
+    border-radius:10px;
+}
+.post img{
+    max-width:100%;
+    border-radius:10px;
+}
+.comment{
+    background:#0ea5e9;
+    padding:5px;
+    margin-top:5px;
+    border-radius:5px;
+    font-size:14px;
+}
+input,button{
+    padding:5px;
+    border-radius:5px;
+    border:none;
+}
+</style>
 </head>
+
 <body>
 
 <header>
-    <h1>Mal Yağız Yasin - Elektronik Dünyası</h1>
-    <p>Devreler, Arduino ve Robotik Projeler</p>
+<h1>Elektronik Paylaşım Platformu</h1>
+<p>Projeni paylaş, yorum al!</p>
 </header>
 
-<nav>
-    <a href="#">Ana Sayfa</a>
-    <a href="#">Projeler</a>
-    <a href="#">Hakkında</a>
-    <a href="#">İletişim</a>
-</nav>
+<div id="content"></div>
 
-<section>
-    <div class="card">
-        <h2>Arduino LED Projesi</h2>
-        <p>Bu projede temel LED yakma devresi anlatılmaktadır. Direnç hesaplama ve bağlantı şeması dahil.</p>
-        <button onclick="alert('Mal Yağız Yasin Elektronik Öğreniyor!')">Detay Gör</button>
-    </div>
+<input type="file" id="imageInput" accept="image/*" style="display:none">
+<button id="uploadBtn">+</button>
 
-    <div class="card">
-        <h2>Direnç Hesaplama</h2>
-        <p>Ohm Kanunu: V = I x R</p>
-        <p>Örnek: 12V ve 2A için direnç = 6 Ohm</p>
-    </div>
-</section>
+<script>
+let username = localStorage.getItem("username");
 
-<footer>
-    © 2026 Mal Yağız Yasin - Tüm Hakları Saklıdır
-</footer>
+if(!username){
+    username = prompt("İsmini gir:");
+    if(username){
+        localStorage.setItem("username", username);
+    } else {
+        username = "Anonim";
+    }
+}
+
+let posts = JSON.parse(localStorage.getItem("posts")) || [];
+
+function savePosts(){
+    localStorage.setItem("posts", JSON.stringify(posts));
+}
+
+function renderPosts(){
+    const content = document.getElementById("content");
+    content.innerHTML = "";
+
+    posts.forEach((post,index)=>{
+        const div = document.createElement("div");
+        div.className = "post";
+
+        div.innerHTML = `
+            <h3>${post.user}</h3>
+            <img src="${post.image}">
+            <div id="comments-${index}"></div>
+            <input type="text" placeholder="Yorum yaz..." id="commentInput-${index}">
+            <button onclick="addComment(${index})">Gönder</button>
+        `;
+
+        content.appendChild(div);
+
+        const commentDiv = document.getElementById(`comments-${index}`);
+        post.comments.forEach(c=>{
+            const cDiv = document.createElement("div");
+            cDiv.className = "comment";
+            cDiv.innerText = c;
+            commentDiv.appendChild(cDiv);
+        });
+    });
+}
+
+function addComment(index){
+    const input = document.getElementById(`commentInput-${index}`);
+    if(input.value.trim() !== ""){
+        posts[index].comments.push(username + ": " + input.value);
+        savePosts();
+        renderPosts();
+    }
+}
+
+document.getElementById("uploadBtn").onclick = ()=>{
+    document.getElementById("imageInput").click();
+}
+
+document.getElementById("imageInput").onchange = function(){
+    const file = this.files[0];
+    const reader = new FileReader();
+
+    reader.onload = function(e){
+        posts.unshift({
+            user: username,
+            image: e.target.result,
+            comments: []
+        });
+        savePosts();
+        renderPosts();
+    }
+
+    reader.readAsDataURL(file);
+}
+
+renderPosts();
+</script>
 
 </body>
 </html>
