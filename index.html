@@ -3,54 +3,56 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Elektronik Paylaşım - Mal Yağız Yasin</title>
+<title>Elektronik Paylaşım</title>
 
 <style>
 body{
-    margin:0;
-    font-family:Arial, sans-serif;
-    background:#0f172a;
-    color:white;
+  margin:0;
+  font-family:Arial;
+  background:#0f172a;
+  color:white;
 }
 header{
-    background:#1e293b;
-    padding:15px;
-    text-align:center;
+  background:#1e293b;
+  padding:15px;
+  text-align:center;
 }
 h1{color:#38bdf8;}
-#uploadBtn{
-    position:fixed;
-    bottom:20px;
-    right:20px;
-    width:60px;
-    height:60px;
-    border-radius:50%;
-    font-size:30px;
-    border:none;
-    background:#38bdf8;
-    cursor:pointer;
-}
+
 .post{
-    background:#1e293b;
-    margin:20px;
-    padding:15px;
-    border-radius:10px;
+  background:#1e293b;
+  margin:20px;
+  padding:15px;
+  border-radius:10px;
 }
 .post img{
-    max-width:100%;
-    border-radius:10px;
+  max-width:100%;
+  border-radius:10px;
 }
+
 .comment{
-    background:#0ea5e9;
-    padding:5px;
-    margin-top:5px;
-    border-radius:5px;
-    font-size:14px;
+  background:#0ea5e9;
+  margin-top:5px;
+  padding:5px;
+  border-radius:5px;
 }
-input,button{
-    padding:5px;
-    border-radius:5px;
-    border:none;
+
+#uploadBtn{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  width:60px;
+  height:60px;
+  border-radius:50%;
+  font-size:30px;
+  border:none;
+  background:#38bdf8;
+  cursor:pointer;
+}
+input{
+  padding:5px;
+  border-radius:5px;
+  border:none;
 }
 </style>
 </head>
@@ -59,91 +61,102 @@ input,button{
 
 <header>
 <h1>Elektronik Paylaşım Platformu</h1>
-<p>Projeni paylaş, yorum al!</p>
 </header>
 
-<div id="content"></div>
+<div id="posts"></div>
 
 <input type="file" id="imageInput" accept="image/*" style="display:none">
 <button id="uploadBtn">+</button>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+
+const supabase = window.supabase.createClient(
+  "https://tfniljopfegpruxqxdgg.supabase.co",
+  "sb_publishable_EcpR3uHlFWUT_YkM6Pzplw_MdLCU4cB"
+);
+
 let username = localStorage.getItem("username");
-
 if(!username){
-    username = prompt("İsmini gir:");
-    if(username){
-        localStorage.setItem("username", username);
-    } else {
-        username = "Anonim";
-    }
+  username = prompt("İsmini gir:");
+  localStorage.setItem("username", username);
 }
 
-let posts = JSON.parse(localStorage.getItem("posts")) || [];
+const postsDiv = document.getElementById("posts");
 
-function savePosts(){
-    localStorage.setItem("posts", JSON.stringify(posts));
-}
+async function loadPosts(){
+  const { data: posts } = await supabase
+    .from("posts")
+    .select("*")
+    .order("created_at", { ascending: false });
 
-function renderPosts(){
-    const content = document.getElementById("content");
-    content.innerHTML = "";
+  postsDiv.innerHTML = "";
 
-    posts.forEach((post,index)=>{
-        const div = document.createElement("div");
-        div.className = "post";
+  for(const post of posts){
+    const { data: comments } = await supabase
+      .from("comments")
+      .select("*")
+      .eq("post_id", post.id)
+      .order("created_at");
 
-        div.innerHTML = `
-            <h3>${post.user}</h3>
-            <img src="${post.image}">
-            <div id="comments-${index}"></div>
-            <input type="text" placeholder="Yorum yaz..." id="commentInput-${index}">
-            <button onclick="addComment(${index})">Gönder</button>
-        `;
+    const div = document.createElement("div");
+    div.className = "post";
+    div.innerHTML = `
+      <h3>${post.username}</h3>
+      <img src="${post.image_url}">
+      <div id="comments-${post.id}"></div>
+      <input type="text" id="input-${post.id}" placeholder="Yorum yaz...">
+      <button onclick="addComment(${post.id})">Gönder</button>
+    `;
 
-        content.appendChild(div);
+    postsDiv.appendChild(div);
 
-        const commentDiv = document.getElementById(`comments-${index}`);
-        post.comments.forEach(c=>{
-            const cDiv = document.createElement("div");
-            cDiv.className = "comment";
-            cDiv.innerText = c;
-            commentDiv.appendChild(cDiv);
-        });
+    const commentDiv = document.getElementById("comments-"+post.id);
+    comments.forEach(c=>{
+      const cDiv = document.createElement("div");
+      cDiv.className = "comment";
+      cDiv.innerText = c.username + ": " + c.comment;
+      commentDiv.appendChild(cDiv);
     });
+  }
 }
 
-function addComment(index){
-    const input = document.getElementById(`commentInput-${index}`);
-    if(input.value.trim() !== ""){
-        posts[index].comments.push(username + ": " + input.value);
-        savePosts();
-        renderPosts();
-    }
+window.addComment = async function(postId){
+  const input = document.getElementById("input-"+postId);
+  if(input.value.trim() === "") return;
+
+  await supabase.from("comments").insert({
+    post_id: postId,
+    username: username,
+    comment: input.value
+  });
+
+  input.value = "";
+  loadPosts();
 }
 
 document.getElementById("uploadBtn").onclick = ()=>{
-    document.getElementById("imageInput").click();
+  document.getElementById("imageInput").click();
 }
 
-document.getElementById("imageInput").onchange = function(){
-    const file = this.files[0];
-    const reader = new FileReader();
+document.getElementById("imageInput").onchange = async function(){
+  const file = this.files[0];
+  const fileName = Date.now() + "-" + file.name;
 
-    reader.onload = function(e){
-        posts.unshift({
-            user: username,
-            image: e.target.result,
-            comments: []
-        });
-        savePosts();
-        renderPosts();
-    }
+  await supabase.storage.from("images").upload(fileName, file);
 
-    reader.readAsDataURL(file);
+  const { data } = supabase.storage.from("images").getPublicUrl(fileName);
+
+  await supabase.from("posts").insert({
+    username: username,
+    image_url: data.publicUrl
+  });
+
+  loadPosts();
 }
 
-renderPosts();
+loadPosts();
+
 </script>
 
 </body>
